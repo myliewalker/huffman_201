@@ -56,6 +56,7 @@ public class HuffProcessor {
 
 		in.reset();
 		writeCompressedBits(codings, in, out);
+		out.writeBits(BITS_PER_WORD+1, PSEUDO_EOF);
 		out.close();
 	}
 
