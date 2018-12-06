@@ -70,6 +70,7 @@ public class HuffProcessor {
 		}
 		freq[PSEUDO_EOF] = 1;
 		return freq;
+		//if freq[PSEUDO_EOF] is set after, correct # of bits
 	}
 
 	private HuffNode makeTreeFromCounts(int[] counts) {
