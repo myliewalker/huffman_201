@@ -165,6 +165,7 @@ public class HuffProcessor {
 			int bits = in.readBits(BITS_PER_WORD);
 			if (bits == -1) {
 				out.writeBits(BITS_PER_WORD+1, PSEUDO_EOF);
+				break;
 			}
 //			for (int k : myMap.keySet()) {
 //				if (myMap.get(k).equals(codings[i])) {
