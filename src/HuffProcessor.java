@@ -27,6 +27,9 @@ public class HuffProcessor {
 	public static final int DEBUG_HIGH = 4;
 	public static final int DEBUG_LOW = 1;
 	
+	// public HuffProcessor hp  = new HuffProcessor(4);
+//	 HuffProcessor hp = new HuffProcessor(DEBUG_HIGH);
+	
 	public HuffProcessor() {
 		this(0);
 	}
@@ -82,41 +85,71 @@ public class HuffProcessor {
 			//does the value matter?
 			pq.add(t);
 		}
-		HuffNode root = pq.remove();		
+		HuffNode root = pq.remove();	
+		// if (myDebugLevel >= DEBUG_HIGH) {
+		// 	System.out.printf("pq created with %d nodes \n", pq.size());
+		// }
 		return root;
-		//what are you supposed to return?
 	}
-
+	
 	private TreeMap<Integer,String> myMap = new TreeMap<>();
 	private String[] makeCodingsFromTree (HuffNode root) {
 		String[] encodings = new String[ALPH_SIZE + 1];
 		codingHelper(root,"",encodings);
-//		int index = 0;
+		int index = 0;
 		for(int s : myMap.keySet()) {
-			encodings[s] = myMap.get(s);
-//			index += 1;
+			encodings[index] = myMap.get(s);
+			index += 1;
 		}
 		return encodings;
 	}
-
+	
 	private void codingHelper (HuffNode root, String path, String[] encodings) {
 		if (root == null) return;
 		if (root.myLeft == null && root.myRight == null) {
 			myMap.put(root.myValue, path);
 //			encodings[root.myValue] = path;
+			// if (myDebugLevel >= DEBUG_HIGH) {
+			// 	System.out.printf("encoding for %d is %s\n", root.myValue, path);
+			// }
 			return;	
 		}
 		codingHelper(root.myLeft, path+"0", encodings);
 		codingHelper(root.myRight, path+"1", encodings);
 	}
 
+////	private TreeMap<Integer,String> myMap = new TreeMap<>();
+//	private String[] makeCodingsFromTree (HuffNode root) {
+//		String[] encodings = new String[ALPH_SIZE + 1];
+//		codingHelper(root,"",encodings);
+////		int index = 0;
+////		for(int s : myMap.keySet()) {
+////			encodings[s] = myMap.get(s);
+////			index += 1;
+////		}
+//		return encodings;
+//	}
+
+//	private void codingHelper (HuffNode root, String path, String[] encodings) {
+//		if (root == null) return;
+//		if (root.myLeft == null && root.myRight == null) {
+////			myMap.put(root.myValue, path);
+//			encodings[root.myValue] = path;
+//			return;	
+//		}
+//		codingHelper(root.myLeft, path+"0", encodings);
+//		codingHelper(root.myRight, path+"1", encodings);
+//	}
+
 	private void writeHeader(HuffNode root, BitOutputStream out) {
-		if (root.myLeft != null || root.myRight != null) {
+		if (root.myLeft != null && root.myRight != null) {
 			out.writeBits(1, 0);
+			writeHeader(root.myLeft, out);
+			writeHeader(root.myRight, out);
 		}
 		else {
 			out.writeBits(1, 1);
-			out.writeBits(9, root.myValue);
+			out.writeBits(BITS_PER_WORD+1, root.myValue);
 		}
 	}
 
@@ -125,20 +158,35 @@ public class HuffProcessor {
 //		for (String s : codings) {
 //			all.add(s);
 //		}
-		for (int i = 0; i < codings.length; i++) {
+		for (char ch = 'A'; ch <= 'Z'; ch++) {
 			int bits = in.readBits(BITS_PER_WORD);
-			for (int k : myMap.keySet()) {
-				if (myMap.get(k).equals(codings[i])) {
-					String code = myMap.get(k);
-					if (code == null) break;
-		   			out.writeBits(code.length(), Integer.parseInt(code,2));
-		   			break;
-				}
-			}
-//			String code = myMap.
+//			for (int k : myMap.keySet()) {
+//				if (myMap.get(k).equals(codings[i])) {
+//					String code = myMap.get(k);
+//					if (code == null) break;
+//		   			out.writeBits(code.length(), Integer.parseInt(code,2));
+//		   			break;
+//				}
+//			}
+			String code = codings[ch];
+			//is ch supposed to be an int from 0 to length or a char??
+			if (code == null) continue;
+   			out.writeBits(code.length(), Integer.parseInt(code,2));
+		}
+//		for (int i = 0; i < codings.length; i++) {
+//			int bits = in.readBits(BITS_PER_WORD);
+////			for (int k : myMap.keySet()) {
+////				if (myMap.get(k).equals(codings[i])) {
+////					String code = myMap.get(k);
+////					if (code == null) break;
+////		   			out.writeBits(code.length(), Integer.parseInt(code,2));
+////		   			break;
+////				}
+////			}
+//			String code = codings[i];
 //			if (code == null) continue;
 //   			out.writeBits(code.length(), Integer.parseInt(code,2));
-		}
+//		}
 	}
 
 
