@@ -62,10 +62,13 @@ public class HuffProcessor {
 	private int[] readForCounts(BitInputStream in) {
 		int[] freq = new int[ALPH_SIZE + 1];
 		while (in.readBits(BITS_PER_WORD) != -1) {
-			if (in.readBits(BITS_PER_WORD) == PSEUDO_EOF) break;
+			if (in.readBits(BITS_PER_WORD) == PSEUDO_EOF) {
+				freq[PSEUDO_EOF] = 1;
+				break;
+			}
 			freq[in.readBits(BITS_PER_WORD)]++;
 		}
-		freq[PSEUDO_EOF] = 1;
+//		freq[PSEUDO_EOF] = 1;
 		return freq;
 	}
 
