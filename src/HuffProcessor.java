@@ -62,7 +62,7 @@ public class HuffProcessor {
 	private int[] readForCounts(BitInputStream in) {
 		int[] freq = new int[ALPH_SIZE + 1];
 		while (in.readBits(BITS_PER_WORD) != -1) {
-			// if (in.readBits(BITS_PER_WORD) == PSEUDO_EOF) {
+			if (in.readBits(BITS_PER_WORD) == PSEUDO_EOF) break;
 			// 	freq[in.readBits(BITS_PER_WORD)] = 1;
 			// }
 			freq[in.readBits(BITS_PER_WORD)]++;
@@ -201,7 +201,7 @@ public class HuffProcessor {
 	 */
 	public void decompress(BitInputStream in, BitOutputStream out){
 		int bits = in.readBits(BITS_PER_INT);
-		if (bits != HUFF_TREE || bits == -1) {
+		if (bits != HUFF_TREE) {
 			throw new HuffException("illegal header starts with " + bits);
 		}
 
