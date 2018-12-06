@@ -87,14 +87,14 @@ public class HuffProcessor {
 		//what are you supposed to return?
 	}
 
-	TreeMap<Integer,String> myMap = new TreeMap<>();
+	private TreeMap<Integer,String> myMap = new TreeMap<>();
 	private String[] makeCodingsFromTree (HuffNode root) {
 		String[] encodings = new String[ALPH_SIZE + 1];
 		codingHelper(root,"",encodings);
-		int index = 0;
+//		int index = 0;
 		for(int s : myMap.keySet()) {
-			encodings[index] = myMap.get(s);
-			index += 1;
+			encodings[s] = myMap.get(s);
+//			index += 1;
 		}
 		return encodings;
 	}
@@ -122,14 +122,22 @@ public class HuffProcessor {
 
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out) {
 		ArrayList<String> all = new ArrayList<>();
-		for (String s : codings) {
-			all.add(s);
-		}
+//		for (String s : codings) {
+//			all.add(s);
+//		}
 		for (int i = 0; i < codings.length; i++) {
 			int bits = in.readBits(BITS_PER_WORD);
-			String code = codings[i];
-			if (code == null) continue;
-   			out.writeBits(code.length(), Integer.parseInt(code,2));
+			for (int k : myMap.keySet()) {
+				if (myMap.get(k).equals(codings[i])) {
+					String code = myMap.get(k);
+					if (code == null) break;
+		   			out.writeBits(code.length(), Integer.parseInt(code,2));
+		   			break;
+				}
+			}
+//			String code = myMap.
+//			if (code == null) continue;
+//   			out.writeBits(code.length(), Integer.parseInt(code,2));
 		}
 	}
 
