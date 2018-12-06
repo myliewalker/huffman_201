@@ -68,7 +68,7 @@ public class HuffProcessor {
 			}
 			freq[in.readBits(BITS_PER_WORD)]++;
 		}
-//		freq[PSEUDO_EOF] = 1;
+		freq[PSEUDO_EOF] = 1;
 		return freq;
 	}
 
