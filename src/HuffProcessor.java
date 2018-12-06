@@ -64,6 +64,7 @@ public class HuffProcessor {
 		while (in.readBits(BITS_PER_WORD) != -1) {
 			if (in.readBits(BITS_PER_WORD) == PSEUDO_EOF) {
 				freq[PSEUDO_EOF] = 1;
+				//generating an index out of bounds exception bc PSEUDO_EOF is -1
 				break;
 			}
 			freq[in.readBits(BITS_PER_WORD)]++;
@@ -162,6 +163,9 @@ public class HuffProcessor {
 //		}
 		for (char ch = 'A'; ch <= 'Z'; ch++) {
 			int bits = in.readBits(BITS_PER_WORD);
+			if (bits == -1) {
+				out.writeBits(BITS_PER_WORD+1, PSEUDO_EOF);
+			}
 //			for (int k : myMap.keySet()) {
 //				if (myMap.get(k).equals(codings[i])) {
 //					String code = myMap.get(k);
