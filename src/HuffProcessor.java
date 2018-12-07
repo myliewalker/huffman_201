@@ -156,7 +156,7 @@ public class HuffProcessor {
 		}
 		else {
 			int value = in.readBits(BITS_PER_WORD + 1);
-    			return new HuffNode(value, 0, null, null);
+    		return new HuffNode(value, 0, null, null);
 		}
 	}
 
