@@ -64,34 +64,30 @@ public class HuffProcessor {
 		int[] freq = new int[ALPH_SIZE + 1];
 		while (true){
 			int val = in.readBits(BITS_PER_WORD);
-			// System.out.print(val + " ");
+			System.out.print(val + " ");
 			if (val == -1) break;
 			freq[val]++;
 			//reading in 8 + 1 instead of 17 + 1
 		}
 		freq[PSEUDO_EOF] = 1;
-//		System.out.println("");
-//		for (int i = 0; i < freq.length; i++) {
-//			System.out.print(freq[i] + " ");
-//		}
 		return freq;
 	}
 
 	private HuffNode makeTreeFromCounts(int[] counts) {
 		PriorityQueue<HuffNode> pq = new PriorityQueue<>();
-		for (int i = 0; i < counts.length; i++) {
+		for (int i = 0; i < ALPH_SIZE+1; i++) {
+			//should that be ALPH_SIZE or counts.length?
 			if (counts[i] > 0) {
 				pq.add(new HuffNode(i, counts[i], null, null));
 			}
 		}
-		// if (myDebugLevel >= DEBUG_HIGH) {
-		// 	System.out.printf("pq created with %d nodes \n", pq.size());
-		// }
+		if (myDebugLevel >= DEBUG_HIGH) {
+			System.out.printf("pq created with %d nodes \n", pq.size());
+		}
 		while (pq.size() > 1) {
 			HuffNode left = pq.remove();
 			HuffNode right = pq.remove();
 			HuffNode t = new HuffNode(0, left.myWeight+right.myWeight, left, right);
-			//does the value matter?
 			pq.add(t);
 		}
 		HuffNode root = pq.remove();	
@@ -102,22 +98,22 @@ public class HuffProcessor {
 	private String[] makeCodingsFromTree (HuffNode root) {
 		String[] encodings = new String[ALPH_SIZE + 1];
 		codingHelper(root,"",encodings);
-		int index = 0;
-		for(int s : myMap.keySet()) {
-			encodings[index] = myMap.get(s);
-			index += 1;
-		}
+//		int index = 0;
+//		for(int s : myMap.keySet()) {
+//			encodings[index] = myMap.get(s);
+//			index += 1;
+//		}
 		return encodings;
 	}
 	
 	private void codingHelper (HuffNode root, String path, String[] encodings) {
 		if (root == null) return;
 		if (root.myLeft == null && root.myRight == null) {
-			myMap.put(root.myValue, path);
-//			encodings[root.myValue] = path;
-			// if (myDebugLevel >= DEBUG_HIGH) {
-			// 	System.out.printf("encoding for %d is %s\n", root.myValue, path);
-			// }
+//			myMap.put(root.myValue, path);
+			encodings[root.myValue] = path;
+			if (myDebugLevel >= DEBUG_HIGH) {
+				System.out.printf("encoding for %d is %s\n", root.myValue, path);
+			}
 			return;	
 		}
 		codingHelper(root.myLeft, path+"0", encodings);
