@@ -64,7 +64,7 @@ public class HuffProcessor {
 		int[] freq = new int[ALPH_SIZE + 1];
 		while (true){
 			int val = in.readBits(BITS_PER_WORD);
-			System.out.print(val + " ");
+			// System.out.print(val + " ");
 			if (val == -1) break;
 			freq[val]++;
 			//reading in 8 + 1 instead of 17 + 1
@@ -84,9 +84,9 @@ public class HuffProcessor {
 				pq.add(new HuffNode(i, counts[i], null, null));
 			}
 		}
-		if (myDebugLevel >= DEBUG_HIGH) {
-			System.out.printf("pq created with %d nodes \n", pq.size());
-		}
+		// if (myDebugLevel >= DEBUG_HIGH) {
+		// 	System.out.printf("pq created with %d nodes \n", pq.size());
+		// }
 		while (pq.size() > 1) {
 			HuffNode left = pq.remove();
 			HuffNode right = pq.remove();
@@ -115,9 +115,9 @@ public class HuffProcessor {
 		if (root.myLeft == null && root.myRight == null) {
 			myMap.put(root.myValue, path);
 //			encodings[root.myValue] = path;
-			if (myDebugLevel >= DEBUG_HIGH) {
-				System.out.printf("encoding for %d is %s\n", root.myValue, path);
-			}
+			// if (myDebugLevel >= DEBUG_HIGH) {
+			// 	System.out.printf("encoding for %d is %s\n", root.myValue, path);
+			// }
 			return;	
 		}
 		codingHelper(root.myLeft, path+"0", encodings);
