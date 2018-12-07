@@ -67,7 +67,6 @@ public class HuffProcessor {
 			System.out.print(val + " ");
 			if (val == -1) break;
 			freq[val]++;
-			//reading in 8 + 1 instead of 17 + 1
 		}
 		freq[PSEUDO_EOF] = 1;
 		return freq;
@@ -76,7 +75,6 @@ public class HuffProcessor {
 	private HuffNode makeTreeFromCounts(int[] counts) {
 		PriorityQueue<HuffNode> pq = new PriorityQueue<>();
 		for (int i = 0; i < ALPH_SIZE+1; i++) {
-			//should that be ALPH_SIZE or counts.length?
 			if (counts[i] > 0) {
 				pq.add(new HuffNode(i, counts[i], null, null));
 			}
@@ -156,43 +154,17 @@ public class HuffProcessor {
 	}
 
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out) {
-		ArrayList<String> all = new ArrayList<>();
-//		for (String s : codings) {
-//			all.add(s);
-//		}
-		for (char ch = 'A'; ch <= 'Z'; ch++) {
-			int bits = in.readBits(BITS_PER_WORD);
-			if (bits == -1) {
-				out.writeBits(BITS_PER_WORD+1, PSEUDO_EOF);
-				break;
-			}
-//			for (int k : myMap.keySet()) {
-//				if (myMap.get(k).equals(codings[i])) {
-//					String code = myMap.get(k);
-//					if (code == null) break;
-//		   			out.writeBits(code.length(), Integer.parseInt(code,2));
-//		   			break;
-//				}
-//			}
-			String code = codings[ch];
-			//is ch supposed to be an int from 0 to length or a char??
-			if (code == null) continue;
+		int bits = 0;
+		while (bits != -1) {
+			bits = in.readBits(BITS_PER_WORD);
+			String code = codings[bits];
+//			if (code == null) continue;
    			out.writeBits(code.length(), Integer.parseInt(code,2));
 		}
-//		for (int i = 0; i < codings.length; i++) {
-//			int bits = in.readBits(BITS_PER_WORD);
-////			for (int k : myMap.keySet()) {
-////				if (myMap.get(k).equals(codings[i])) {
-////					String code = myMap.get(k);
-////					if (code == null) break;
-////		   			out.writeBits(code.length(), Integer.parseInt(code,2));
-////		   			break;
-////				}
-////			}
-//			String code = codings[i];
-//			if (code == null) continue;
-//   			out.writeBits(code.length(), Integer.parseInt(code,2));
-//		}
+		//FOR CODINGS: index is a character, value is a sequence. Ex: codings['A'] = 001
+		if (in.readBits(BITS_PER_WORD) == -1) {
+			out.writeBits(BITS_PER_WORD+1, PSEUDO_EOF);
+		}
 	}
 
 
