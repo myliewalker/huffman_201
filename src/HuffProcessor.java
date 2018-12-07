@@ -62,22 +62,19 @@ public class HuffProcessor {
 
 	private int[] readForCounts(BitInputStream in) {
 		int[] freq = new int[ALPH_SIZE + 1];
-//		while (in.readBits(BITS_PER_WORD) != -1) {
-////			if (in.readBits(BITS_PER_WORD) == PSEUDO_EOF) {
-////				freq[PSEUDO_EOF] = 1;
-////				//generating an index out of bounds exception bc PSEUDO_EOF is -1
-////				break;
-////			}
-//			freq[in.readBits(BITS_PER_WORD)]++;
-//		}
 		while (true){
 			int val = in.readBits(BITS_PER_WORD);
+			System.out.print(val + " ");
 			if (val == -1) break;
 			freq[val]++;
+			//reading in 8 + 1 instead of 17 + 1
 		}
 		freq[PSEUDO_EOF] = 1;
+//		System.out.println("");
+//		for (int i = 0; i < freq.length; i++) {
+//			System.out.print(freq[i] + " ");
+//		}
 		return freq;
-		//if freq[PSEUDO_EOF] is set after, correct # of bits
 	}
 
 	private HuffNode makeTreeFromCounts(int[] counts) {
@@ -87,6 +84,9 @@ public class HuffProcessor {
 				pq.add(new HuffNode(i, counts[i], null, null));
 			}
 		}
+		if (myDebugLevel >= DEBUG_HIGH) {
+			System.out.printf("pq created with %d nodes \n", pq.size());
+		}
 		while (pq.size() > 1) {
 			HuffNode left = pq.remove();
 			HuffNode right = pq.remove();
@@ -95,9 +95,6 @@ public class HuffProcessor {
 			pq.add(t);
 		}
 		HuffNode root = pq.remove();	
-		if (myDebugLevel >= DEBUG_HIGH) {
-			System.out.printf("pq created with %d nodes \n", pq.size());
-		}
 		return root;
 	}
 	
