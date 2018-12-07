@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.PriorityQueue;
-import java.util.TreeMap;
 
 /**
  * Although this class has a history of several years,
@@ -26,9 +24,6 @@ public class HuffProcessor {
 	
 	public static final int DEBUG_HIGH = 4;
 	public static final int DEBUG_LOW = 1;
-	
-//	public HuffProcessor hp  = new HuffProcessor(4);
-//	 HuffProcessor hp = new HuffProcessor(DEBUG_HIGH);
 	
 	public HuffProcessor() {
 		this(0);
@@ -64,7 +59,6 @@ public class HuffProcessor {
 		int[] freq = new int[ALPH_SIZE + 1];
 		while (true){
 			int val = in.readBits(BITS_PER_WORD);
-			//  System.out.print(val + " ");
 			if (val == -1) break;
 			freq[val]++;
 		}
@@ -79,9 +73,6 @@ public class HuffProcessor {
 				pq.add(new HuffNode(i, counts[i], null, null));
 			}
 		}
-		//  if (myDebugLevel >= DEBUG_HIGH) {
-		//  	System.out.printf("pq created with %d nodes \n", pq.size());
-		//  }
 		while (pq.size() > 1) {
 			HuffNode left = pq.remove();
 			HuffNode right = pq.remove();
@@ -102,9 +93,6 @@ public class HuffProcessor {
 		if (root == null) return;
 		if (root.myLeft == null && root.myRight == null) {
 			encodings[root.myValue] = path;
-//			 if (myDebugLevel >= DEBUG_HIGH) {
-//			 	System.out.printf("encoding for %d is %s\n", root.myValue, path);
-//			 }
 			return;	
 		}
 		codingHelper(root.myLeft, path+"0", encodings);
@@ -120,24 +108,16 @@ public class HuffProcessor {
 		else {
 			out.writeBits(1, 1);
 			out.writeBits(BITS_PER_WORD+1, root.myValue);
-			// if (myDebugLevel >= DEBUG_HIGH) {
-			//  	System.out.printf("wrote leaf for tree %d \n", root.myValue);
-			//  }
 		}
 	}
 
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out) {
 		int bits = in.readBits(BITS_PER_WORD);
 		while (bits != -1) {
-//			String code = Integer.toString(bits);
 			String code = codings[bits];
-//			String code = codings[bits];
-//			confused about how to go through codings
    			out.writeBits(code.length(), Integer.parseInt(code, 2));
-   			// System.out.printf("%d wrote %s for %d bits \n", bits, code);
 			bits = in.readBits(BITS_PER_WORD);
 		}
-		//FOR CODINGS: index is a character, value is a sequence. Ex: codings['A'] = 001
 		String code = codings[PSEUDO_EOF];
 		out.writeBits(code.length(), Integer.parseInt(code, 2));
 	}
@@ -166,8 +146,7 @@ public class HuffProcessor {
 	private HuffNode readTreeHeader(BitInputStream in) {
 		int bit = in.readBits(1);
 		if (bit == -1) {
-			throw new HuffException("illegal value of " + bit);
-			//may want to change the output of the exception
+			throw new HuffException("not found " + bit);
 		}
 
 		if (bit == 0) {
