@@ -133,13 +133,13 @@ public class HuffProcessor {
 			String code = codings[bits];
 //			String code = codings[bits];
 //			confused about how to go through codings
-   			out.writeBits(code.length(), Integer.parseInt(code));
+   			out.writeBits(code.length(), Integer.parseInt(code, 2));
    			// System.out.printf("%d wrote %s for %d bits \n", bits, code);
 			bits = in.readBits(BITS_PER_WORD);
 		}
 		//FOR CODINGS: index is a character, value is a sequence. Ex: codings['A'] = 001
 		String code = codings[PSEUDO_EOF];
-		out.writeBits(code.length(), Integer.parseInt(code));
+		out.writeBits(code.length(), Integer.parseInt(code, 2));
 	}
 
 
