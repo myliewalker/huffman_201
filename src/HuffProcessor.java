@@ -130,7 +130,7 @@ public class HuffProcessor {
 			String code = Integer.toString(bits);
 //			String code = codings[bits];
 //			if (code == null) continue;
-   			out.writeBits(code.length(), Integer.parseInt(code,2));
+   			out.writeBits(code.length(), bits);
 		}
 		//FOR CODINGS: index is a character, value is a sequence. Ex: codings['A'] = 001
 		if (in.readBits(BITS_PER_WORD) == -1) {
