@@ -92,22 +92,15 @@ public class HuffProcessor {
 		return root;
 	}
 	
-	private TreeMap<Integer,String> myMap = new TreeMap<>();
 	private String[] makeCodingsFromTree (HuffNode root) {
 		String[] encodings = new String[ALPH_SIZE + 1];
 		codingHelper(root,"",encodings);
-//		int index = 0;
-//		for(int s : myMap.keySet()) {
-//			encodings[index] = myMap.get(s);
-//			index += 1;
-//		}
 		return encodings;
 	}
 	
 	private void codingHelper (HuffNode root, String path, String[] encodings) {
 		if (root == null) return;
 		if (root.myLeft == null && root.myRight == null) {
-//			myMap.put(root.myValue, path);
 			encodings[root.myValue] = path;
 			if (myDebugLevel >= DEBUG_HIGH) {
 				System.out.printf("encoding for %d is %s\n", root.myValue, path);
@@ -117,30 +110,7 @@ public class HuffProcessor {
 		codingHelper(root.myLeft, path+"0", encodings);
 		codingHelper(root.myRight, path+"1", encodings);
 	}
-
-////	private TreeMap<Integer,String> myMap = new TreeMap<>();
-//	private String[] makeCodingsFromTree (HuffNode root) {
-//		String[] encodings = new String[ALPH_SIZE + 1];
-//		codingHelper(root,"",encodings);
-////		int index = 0;
-////		for(int s : myMap.keySet()) {
-////			encodings[s] = myMap.get(s);
-////			index += 1;
-////		}
-//		return encodings;
-//	}
-
-//	private void codingHelper (HuffNode root, String path, String[] encodings) {
-//		if (root == null) return;
-//		if (root.myLeft == null && root.myRight == null) {
-////			myMap.put(root.myValue, path);
-//			encodings[root.myValue] = path;
-//			return;	
-//		}
-//		codingHelper(root.myLeft, path+"0", encodings);
-//		codingHelper(root.myRight, path+"1", encodings);
-//	}
-
+	
 	private void writeHeader(HuffNode root, BitOutputStream out) {
 		if (root.myLeft != null && root.myRight != null) {
 			out.writeBits(1, 0);
@@ -157,7 +127,8 @@ public class HuffProcessor {
 		int bits = 0;
 		while (bits != -1) {
 			bits = in.readBits(BITS_PER_WORD);
-			String code = codings[bits];
+			String code = Integer.toString(bits);
+//			String code = codings[bits];
 //			if (code == null) continue;
    			out.writeBits(code.length(), Integer.parseInt(code,2));
 		}
