@@ -138,9 +138,8 @@ public class HuffProcessor {
 			bits = in.readBits(BITS_PER_WORD);
 		}
 		//FOR CODINGS: index is a character, value is a sequence. Ex: codings['A'] = 001
-		if (in.readBits(BITS_PER_WORD) == -1) {
-			out.writeBits(BITS_PER_WORD+1, PSEUDO_EOF);
-		}
+		String code = codings[PSEUDO_EOF];
+		out.writeBits(code.length(), Integer.parseInt(code));
 	}
 
 
